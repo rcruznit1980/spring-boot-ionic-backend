@@ -1,8 +1,8 @@
 package br.com.namastetecnologia.cursomc.services;
 
+import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.resource.transaction.spi.TransactionCoordinatorOwner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -41,6 +41,11 @@ public class CategoriaService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possível excluir uma Categoria que possui produtos");
 		}
-		
 	}
+	
+	public List<Categoria> findAll() {  
+		List<Categoria> list = repo.findAll();  
+		return repo.findAll(); 
+	} 
+	
 }
