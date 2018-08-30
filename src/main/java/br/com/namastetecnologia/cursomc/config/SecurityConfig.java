@@ -19,6 +19,7 @@ import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import br.com.namastetecnologia.cursomc.security.JWTAuthenticationFilter;
+import br.com.namastetecnologia.cursomc.security.JWTAuthorizationFilter;
 import br.com.namastetecnologia.cursomc.security.JWTUtil;
 
 @Configuration
@@ -44,13 +45,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
 			// liberando acesso ao H2
 			http.headers().frameOptions().disable();
-			System.out.println("liberando acesso ao H2");
 		}
 
 		http.cors().and().csrf().disable();
 		http.authorizeRequests().antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
 				.antMatchers(PUBLIC_MATCHERS).permitAll().anyRequest().authenticated();
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 
