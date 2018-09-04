@@ -14,7 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.util.IOUtils;
+
+import br.com.namastetecnologia.cursomc.services.exceptions.FileException;
 
 @Service
 public class S3Service {
@@ -35,7 +36,7 @@ public class S3Service {
 
 			return uploadFile(is, fileName, contentType);
 		} catch (IOException e) {
-			throw new RuntimeException("Erro de IO: " + e.getMessage());
+			throw new FileException("Erro de IO: " + e.getMessage());
 		}
 
 	}
@@ -44,14 +45,14 @@ public class S3Service {
 		try {
 			ObjectMetadata meta = new ObjectMetadata();
 			meta.setContentType(contentType);
-					
+
 			LOG.info("Iniciando Upload");
 			s3client.putObject(bucketName, fileName, is, meta);
 			LOG.info("Upload Finalizado");
 
 			return s3client.getUrl(bucketName, fileName).toURI();
 		} catch (URISyntaxException e) {
-			throw new RuntimeException("Erro ao converter URL para URI");
+			throw new FileException("Erro ao converter URL para URI");
 //		} catch (IOException e) {
 //			throw new RuntimeException("Erro ao converter URL para URI");
 		}
